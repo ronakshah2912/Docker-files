@@ -1,0 +1,40 @@
+version: "3"
+services:
+  vprodb:
+    image: smartronak2912/vprofiledb-mysql:V1
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+
+  vprocache01:
+    image: memcached:latest 
+    ports:
+      - "11211:11211"
+    
+  vpromq01:
+    image: rabbitmq:latest
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER="guest"
+      - RABBITMQ_DEFAULT_PASS="guest"
+      
+  vproapp:
+    image: smartronak2912/vprofileapp-tomcat:V1 
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproappdata:/usr/local/tomcat/webapps
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123  
+
+  vproweb:
+    image: smartronak2912/vprofileweb-nginx:V1
+    ports:
+      - "80:80"
+volumes:
+  vprodbdata: {}
+  vproappdata: {}
